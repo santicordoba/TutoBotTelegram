@@ -10,7 +10,7 @@ bot.command("start", (ctx) => {
 
 const sendStartMessage = (ctx) => {
     console.log(ctx.from);
-    const mensajeInicial = `Hola ${ctx.from.username}, bienvenido al bot de Dango`;
+    const mensajeInicial = `Hola ${ctx.from.username}, bienvenido al bot de Gifs`;
     bot.telegram.sendMessage(ctx.chat.id, mensajeInicial, {
         reply_markup: {
             inline_keyboard: [

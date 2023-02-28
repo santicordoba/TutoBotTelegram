@@ -14,8 +14,8 @@ Antes de utilizar este bot, asegúrate de tener instaladas las siguientes depend
 
 1. Clona este repositorio en tu máquina local.
 2. Crea un archivo `.env` en el directorio raiz copiando las entradas que encuentras en `.env.example`
-3. En telegram busca BotFather y usa el comand /start para ver las opciones disponibles, el bot te guiara en el proceso de creación del bot y al final te dara un  API KEY que colocaras en el `.env`
-4. Create una cuenta giphy y obtén una clave de API desde [https://developers.giphy.com/](https://developers.giphy.com/).
+3. En telegram busca BotFather y usa el comand `/start` para ver las opciones disponibles, el bot te guiara en el proceso de creación del bot y al final te dara un  API KEY que colocaras en el `.env`
+4. Create una cuenta giphy y obtén una clave de API desde [https://developers.giphy.com/](https://developers.giphy.com/). Esta API KEY luego deberas pegarla en el archivo `.env`
 5. Ejecuta `npm install` para instalar las dependencias.
 6. Ejecuta `npm run dev` para iniciar el bot.
 

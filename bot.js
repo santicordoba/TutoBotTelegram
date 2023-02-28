@@ -5,29 +5,79 @@ const axios = require('axios');
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.command("start", (ctx) => {
-    ctx.reply("Hola, bienvenido al bot de prueba");
+    sendStartMessage(ctx);
 });
 
-bot.command("hola", (ctx) => {
-    console.log(ctx.from)
-    ctx.reply(`Hola ${ctx.from.username}, soy un bot de prueba`);
+const sendStartMessage = (ctx) => {
+    console.log(ctx.from);
+    const mensajeInicial = `Hola ${ctx.from.username}, bienvenido al bot de Dango`;
+    bot.telegram.sendMessage(ctx.chat.id, mensajeInicial, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    {text: "Obtener un gif", callback_data: "menuGif"},
+                ],
+                [
+                    {text: "Creditos", callback_data: "creditos"}
+                ]
+            ]
+        }
+    });
+}
+
+bot.action("creditos", (ctx) => {
+    ctx.answerCbQuery();
+    ctx.reply("Bot creado por @SantiDango");
 });
 
-// Comando para obtener la suma de dos números
-bot.command("suma", (ctx) => {
-    let num1 = ctx.message.text.split(" ")[1];
-    let num2 = ctx.message.text.split(" ")[2];
-    let resultado = parseInt(num1) + parseInt(num2);
-    ctx.reply("El resultado es: " + resultado);
+bot.action("menuGif", (ctx) => {
+    ctx.answerCbQuery();
+    ctx.telegram.sendMessage(ctx.chat.id, "Seleccione una opcion...", {
+        reply_markup: {
+            keyboard: [
+                [
+                    {text: "Obtener un gif random"},
+                    {text: "Obtener un gif random de X categoria"}
+                ],
+                [
+                    {text: "Salir"}
+                ]
+            ],
+            resize_keyboard: true,
+            one_time_keyboard: true
+        }
+    });
 });
 
-// bot.on("text", (ctx) => {
-//     let mensaje = ctx.message.text;
-//     ctx.reply("Has escrito: " + mensaje);
-// });
-
-bot.hears("Prueba", (ctx) => {
-    ctx.reply("Has escrito la palabra prueba, bien hecho, eres un crack");
+bot.hears("Obtener un gif random", (ctx) => {
+    axios.get(`https://api.giphy.com/v1/gifs/random?api_key=${process.env.GIPHY_API_KEY}`)
+        .then((response) => {
+            ctx.replyWithVideo(response.data.data.images.original.mp4);
+        })
+        .catch((error) => {
+            console.log(error);
+        });    
 })
+
+bot.hears("Obtener un gif random de X categoria", (ctx) => {
+    ctx.reply("Escribe la categoria");
+    bot.on("text", (ctx) => {
+        axios.get(`https://api.giphy.com/v1/gifs/random?api_key=${process.env.GIPHY_API_KEY}&tag=${ctx.message.text}`)
+            .then((response) => {
+                ctx.replyWithVideo(response.data.data.images.original.mp4);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    });
+});
+
+bot.hears("Salir", (ctx) => {
+    ctx.reply("Hasta luego", {
+        reply_markup: {
+            remove_keyboard: true
+        }
+    });
+});
 
 bot.launch();
